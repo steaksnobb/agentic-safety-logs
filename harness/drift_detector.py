@@ -21,6 +21,12 @@ from dataclasses import dataclass, asdict
 import hashlib
 
 
+# Configuration constants for drift detection
+MIN_SIMULATIONS = 1000  # Minimum number of simulations for statistical validity
+DIVISION_BY_ZERO_EPSILON = 1e-10  # Small value to prevent division by zero in relative error calculations
+MAX_ABSOLUTE_ERROR_THRESHOLD = 1e-4  # Maximum acceptable absolute error for drift detection
+
+
 @dataclass
 class DriftAnalysisResult:
     """
@@ -200,8 +206,8 @@ class LogicDriftAnalyzer:
         Raises:
             ValueError: If n_simulations is less than minimum threshold.
         """
-        if n_simulations < 1000:
-            raise ValueError("Minimum 1000 simulations required for statistical validity")
+        if n_simulations < MIN_SIMULATIONS:
+            raise ValueError(f"Minimum {MIN_SIMULATIONS} simulations required for statistical validity")
         
         # Generate test parameters
         if parameter_generator is None:
@@ -266,7 +272,7 @@ class LogicDriftAnalyzer:
         
         # Compute error metrics
         absolute_errors = np.abs(orig_valid - refact_valid)
-        relative_errors = np.abs((orig_valid - refact_valid) / (orig_valid + 1e-10))
+        relative_errors = np.abs((orig_valid - refact_valid) / (orig_valid + DIVISION_BY_ZERO_EPSILON))
         
         mean_abs_error = np.mean(absolute_errors)
         max_abs_error = np.max(absolute_errors)
@@ -281,7 +287,7 @@ class LogicDriftAnalyzer:
             mean_abs_error > self.tolerance_absolute or
             mean_rel_error > self.tolerance_relative or
             ks_pval < self.ks_threshold or
-            max_abs_error > 1e-4
+            max_abs_error > MAX_ABSOLUTE_ERROR_THRESHOLD
         )
         
         # Add drift violations if detected
