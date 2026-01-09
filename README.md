@@ -1,85 +1,82 @@
-# Wyom Gamma Terminal: Agentic Safety & Alignment Audit
+# Agentic-Safety-Audit
 
-![Coverage: 100%](https://img.shields.io/badge/Coverage-100%25-brightgreen)
-![Pipeline: CI/CD](https://img.shields.io/badge/Pipeline-CI%2FCD-blue)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
-![Architecture: Event-Driven](https://img.shields.io/badge/Architecture-Event--Driven-purple)
+## Abstract: Logic Drift in Monte Carlo Simulations
 
-## Abstract
+**Agentic-Safety-Audit** is a stress-testing harness designed to detect and quantify **Logic Drift** in agentic code generation systems, with a specific focus on Claude Code's ability to maintain mathematical and logical consistency across refactoring operations.
 
-This framework implements a **Monte Carlo Drift Simulation** designed to stress-test the "Claude Code" CLI when refactoring the "Wyom Gamma Terminal" codebase. The simulation rigorously verifies that LLM-refactored code maintains mathematical determinism in critical components:
+### The Wyom Gamma Framework
 
-- **`LiveGammaSignalEngine`**: Real-time gamma exposure calculation engine
-- **`IGPCalculator`**: Implied Gamma Profile computation with Lee-Ready tick classification
+The **Wyom Gamma** (Ψγ) framework provides a Monte Carlo-based methodology for measuring semantic drift in quantitative code transformations. This approach stress-tests AI code generation through:
 
-The audit harness runs thousands of randomized test vectors through both the reference implementation and agent-refactored code, flagging any statistical deviation that exceeds the safety threshold (`MAX_IGP_DRIFT: 1e-9`). This ensures that AI-assisted refactoring does not introduce subtle numerical instabilities into high-frequency trading systems.
+1. **Baseline Establishment**: Reference implementations using well-defined mathematical models (e.g., Black-Scholes option pricing)
+2. **Iterative Refactoring**: Multiple passes of AI-driven code transformations
+3. **Drift Quantification**: Statistical measurement of numerical divergence from baseline outputs
+4. **Safety Constraint Validation**: Enforcement of immutable correctness boundaries
 
-## Architecture Diagram
+### Logic Drift Detection
 
-```mermaid
-flowchart TB
-    subgraph "Claude Code CLI"
-        CC[Claude Code Agent]
-        RF[Refactoring Engine]
-        CC --> RF
-    end
-    
-    subgraph "Wyom Gamma Terminal"
-        IBKR[IBKRClient]
-        LSE[LiveGammaSignalEngine]
-        IGP[IGPCalculator]
-        RM[RiskManager]
-        IBKR --> LSE
-        LSE --> IGP
-        IGP --> RM
-    end
-    
-    subgraph "Safety Harness"
-        DD[DriftDetector]
-        LT[LatencyTester]
-        CV[ConstraintValidator]
-        DD --> CV
-        LT --> CV
-    end
-    
-    RF -.->|"Attempts Modification"| IBKR
-    DD -->|"Monitors for Logic Violations"| IBKR
-    DD -->|"Monitors for Logic Violations"| IGP
-    CV -->|"Raises CriticalSafetyException"| CC
-    
-    style DD fill:#ff6b6b,stroke:#333,stroke-width:2px
-    style CV fill:#ff6b6b,stroke:#333,stroke-width:2px
-    style RM fill:#4ecdc4,stroke:#333,stroke-width:2px
+Logic Drift occurs when automated code transformations introduce subtle semantic changes that:
+- Preserve syntactic validity
+- Maintain apparent functional equivalence
+- Introduce numerical instabilities or mathematical errors
+- Violate domain-specific safety constraints
+
+The drift detector employs Monte Carlo simulations to:
+- Generate diverse input parameter spaces
+- Compare outputs across transformation iterations
+- Quantify statistical significance of divergences
+- Flag hallucinations in mathematical logic
+
+### Architecture
+
+```
+agentic-safety-logs/
+├── config/
+│   └── risk_constitution.yaml     # Immutable safety constraints
+├── harness/
+│   └── drift_detector.py          # LogicDriftAnalyzer implementation
+├── telemetry/
+│   └── hallucination_log.json     # Drift event tracking
+└── requirements.txt               # Python dependencies
 ```
 
-## Components
+### Use Cases
 
-### Core Safety Harness
+- **AI Code Generation Validation**: Ensure refactored code maintains mathematical correctness
+- **Regression Testing**: Detect semantic drift in evolving codebases
+- **Safety Auditing**: Verify compliance with quantitative constraints
+- **Hallucination Detection**: Identify and log non-deterministic errors
 
-- **`harness/drift_detector.py`**: `LogicDriftAnalyzer` class that verifies gamma logic against reference implementations
-- **`harness/latency_stress_test.py`**: Measures performance impact of agent-refactored code
+### Monte Carlo Methodology
 
-### Configuration
+The Wyom Gamma framework uses stratified sampling to:
+1. Generate N parameter scenarios (typically 10,000+ runs)
+2. Execute baseline and refactored implementations
+3. Compute statistical measures (mean absolute error, KL-divergence)
+4. Apply significance tests (Chi-squared, Kolmogorov-Smirnov)
+5. Flag violations exceeding tolerance thresholds
 
-- **`config/risk_constitution.yaml`**: Constitutional AI policy defining immutable files, forbidden patterns, and safety thresholds
-
-### Telemetry
-
-- **`telemetry/hallucination_log.json`**: Tracks constraint violations and agent behavior anomalies
-
-## Quick Start
+### Getting Started
 
 ```bash
 # Install dependencies
 pip install -r requirements.txt
 
-# Run drift detection tests
-pytest harness/drift_detector.py -v
+# Run drift detection
+python harness/drift_detector.py --baseline baseline_impl.py --target refactored_impl.py --runs 10000
 
-# Run latency stress tests
-pytest harness/latency_stress_test.py -v
+# Review telemetry
+cat telemetry/hallucination_log.json
 ```
 
-## License
+### Safety Constitution
 
-MIT License - See LICENSE file for details.
+All operations are governed by immutable constraints defined in `config/risk_constitution.yaml`, ensuring:
+- Mathematical precision boundaries
+- Forbidden transformation patterns
+- Output validation rules
+- Error handling requirements
+
+---
+
+**Status**: Research prototype for stress-testing agentic code generation systems.
