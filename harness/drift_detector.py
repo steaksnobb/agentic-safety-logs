@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Callable
 
 import numpy as np
+import pytest
 from numpy.typing import NDArray
 
 # Configure logging
@@ -470,8 +471,6 @@ def test_verify_gamma_logic_fails_with_drifting_impl() -> None:
         weights = prices / (prices.sum() + 1e-10)
         # Introduce 1% drift
         return float(np.sum(gamma_norm * weights * np.sign(gammas))) * 1.01
-
-    import pytest
 
     with pytest.raises(CriticalSafetyException) as exc_info:
         analyzer.verify_gamma_logic(refactored_impl=drifting_impl)

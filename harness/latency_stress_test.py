@@ -8,6 +8,7 @@ that exceeds acceptable thresholds for high-frequency trading systems.
 from __future__ import annotations
 
 import asyncio
+import copy
 import logging
 import statistics
 import time
@@ -438,12 +439,12 @@ def measure_refactored_latency(
 
         # Measure reference
         start = time.perf_counter()
-        reference_orchestrator.process_batch(batch.copy())
+        reference_orchestrator.process_batch(copy.deepcopy(batch))
         reference_latencies.append((time.perf_counter() - start) * 1000)
 
         # Measure refactored
         start = time.perf_counter()
-        refactored_orchestrator.process_batch(batch.copy())
+        refactored_orchestrator.process_batch(copy.deepcopy(batch))
         refactored_latencies.append((time.perf_counter() - start) * 1000)
 
     mean_reference = statistics.mean(reference_latencies)

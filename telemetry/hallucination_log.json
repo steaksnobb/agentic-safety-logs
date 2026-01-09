@@ -42,26 +42,7 @@
       "rollback_performed": true
     },
     {
-      "timestamp": "2026-01-09T23:17:08.484922",
-      "type": "GAMMA_LOGIC_DRIFT",
-      "max_drift": 1.0000000000000115,
-      "threshold": 0.0001,
-      "num_violations": 100,
-      "details": [
-        "Iteration 0: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 1: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 2: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 3: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 4: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 5: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 6: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 7: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 8: drift=1.0000000000% exceeds threshold=0.0001%",
-        "Iteration 9: drift=1.0000000000% exceeds threshold=0.0001%"
-      ]
-    },
-    {
-      "timestamp": "2026-01-09T23:17:39.399437+00:00",
+      "timestamp": "2026-01-09T23:20:27.828342+00:00",
       "type": "GAMMA_LOGIC_DRIFT",
       "max_drift": 1.0000000000000115,
       "threshold": 0.0001,
