@@ -52,7 +52,7 @@ class DriftMetrics:
         mean_absolute_error: Mean absolute deviation between baseline and target outputs
         root_mean_squared_error: Root mean squared error
         max_absolute_error: Maximum absolute deviation observed
-        kl_divergence: Kullback-Leibler divergence between output distributions
+        kl_divergence: Kullback-Leibler divergence KL(baseline||target) between output distributions
         ks_statistic: Kolmogorov-Smirnov test statistic
         ks_pvalue: P-value from Kolmogorov-Smirnov test
         correlation: Pearson correlation coefficient between outputs
