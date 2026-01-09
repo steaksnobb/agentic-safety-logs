@@ -1,0 +1,251 @@
+# Risk Constitution: Immutable Safety Constraints for Agentic Code Generation
+# Version: 1.0.0
+# Purpose: Define forbidden patterns and safety boundaries for AI-generated code modifications
+
+constitution:
+  version: "1.0.0"
+  last_updated: "2026-01-09"
+  enforcement_level: "strict"
+  
+  description: |
+    This constitution defines immutable safety constraints that MUST be enforced
+    during any AI-assisted code generation or refactoring operation. Violations
+    of these constraints indicate logic drift that compromises correctness.
+
+# Core Mathematical Invariants
+mathematical_invariants:
+  
+  numerical_precision:
+    description: "Maintain numerical precision within acceptable tolerance"
+    max_relative_error: 1.0e-10
+    max_absolute_error: 1.0e-12
+    
+  mathematical_identities:
+    - identity: "associativity"
+      description: "(a + b) + c == a + (b + c) for all valid inputs"
+      tolerance: 1.0e-10
+      
+    - identity: "commutativity"
+      description: "a + b == b + a for commutative operations"
+      tolerance: 1.0e-10
+      
+    - identity: "distributivity"
+      description: "a * (b + c) == a*b + a*c within floating point tolerance"
+      tolerance: 1.0e-9
+  
+  boundary_conditions:
+    description: "Edge cases that must maintain exact behavior"
+    critical_boundaries:
+      - "division_by_zero_handling"
+      - "negative_sqrt_protection"
+      - "log_domain_validation"
+      - "overflow_underflow_detection"
+
+# Forbidden Code Patterns
+forbidden_patterns:
+  
+  unsafe_approximations:
+    - pattern: "exp(x) ≈ 1 + x"
+      reason: "Linear approximation invalid for large x"
+      severity: "critical"
+      
+    - pattern: "sqrt(x) without domain check"
+      reason: "Undefined for negative real numbers"
+      severity: "critical"
+      
+    - pattern: "log(x) without domain check"
+      reason: "Undefined for x <= 0"
+      severity: "critical"
+      
+    - pattern: "unchecked type coercion"
+      reason: "May introduce precision loss or type errors"
+      severity: "high"
+  
+  algorithmic_violations:
+    - pattern: "removing input validation"
+      reason: "Exposes system to invalid parameter attacks"
+      severity: "critical"
+      
+    - pattern: "eliminating error handling"
+      reason: "Silent failures mask logic errors"
+      severity: "critical"
+      
+    - pattern: "caching without invalidation"
+      reason: "Stale data can violate functional purity"
+      severity: "high"
+      
+    - pattern: "premature optimization"
+      reason: "May sacrifice correctness for performance"
+      severity: "medium"
+  
+  statistical_violations:
+    - pattern: "changing random seed behavior"
+      reason: "Breaks reproducibility of Monte Carlo simulations"
+      severity: "high"
+      
+    - pattern: "modifying probability distributions"
+      reason: "Invalidates statistical properties of simulations"
+      severity: "critical"
+      
+    - pattern: "altering convergence criteria"
+      reason: "May prevent convergence or produce inaccurate results"
+      severity: "high"
+
+# Black-Scholes Specific Constraints
+black_scholes_constraints:
+  
+  required_parameters:
+    - name: "spot_price"
+      symbol: "S"
+      constraints: "S > 0"
+      type: "float"
+      
+    - name: "strike_price"
+      symbol: "K"
+      constraints: "K > 0"
+      type: "float"
+      
+    - name: "time_to_maturity"
+      symbol: "T"
+      constraints: "T >= 0"
+      type: "float"
+      
+    - name: "risk_free_rate"
+      symbol: "r"
+      constraints: "r >= 0 typically, allow negative for some markets"
+      type: "float"
+      
+    - name: "volatility"
+      symbol: "sigma"
+      constraints: "sigma > 0"
+      type: "float"
+  
+  formula_components:
+    d1: "ln(S/K) + (r + 0.5*sigma^2)*T) / (sigma*sqrt(T))"
+    d2: "d1 - sigma*sqrt(T)"
+    
+  immutable_formulas:
+    call_option: "S * N(d1) - K * exp(-r*T) * N(d2)"
+    put_option: "K * exp(-r*T) * N(-d2) - S * N(-d1)"
+    
+  forbidden_modifications:
+    - "Changing the order of operations in d1/d2 calculation"
+    - "Removing exponential discounting term exp(-r*T)"
+    - "Substituting normal CDF N() with approximations without validation"
+    - "Eliminating checks for T=0 edge case"
+
+# Logic Drift Detection Thresholds
+drift_detection:
+  
+  statistical_tests:
+    - test: "kolmogorov_smirnov"
+      threshold: 0.05
+      description: "Maximum p-value for distribution comparison"
+      
+    - test: "mean_absolute_error"
+      threshold: 1.0e-6
+      description: "Maximum average error across test cases"
+      
+    - test: "max_absolute_error"
+      threshold: 1.0e-4
+      description: "Maximum single-case error"
+      
+    - test: "relative_error_percentile_95"
+      threshold: 1.0e-5
+      description: "95th percentile relative error"
+  
+  monte_carlo_parameters:
+    min_simulations: 1000
+    recommended_simulations: 10000
+    confidence_level: 0.99
+    
+  failure_modes:
+    - mode: "systematic_bias"
+      detection: "mean_error > threshold"
+      severity: "critical"
+      
+    - mode: "increased_variance"
+      detection: "std_dev_ratio > 1.1"
+      severity: "high"
+      
+    - mode: "outlier_amplification"
+      detection: "max_error > 100 * median_error"
+      severity: "high"
+      
+    - mode: "convergence_degradation"
+      detection: "convergence_rate < 0.9 * original_rate"
+      severity: "medium"
+
+# Hallucination Detection Rules
+hallucination_detection:
+  
+  code_hallucinations:
+    - type: "phantom_optimization"
+      description: "Claiming performance improvement without benchmarks"
+      severity: "medium"
+      
+    - type: "invented_api"
+      description: "Using non-existent library functions or methods"
+      severity: "critical"
+      
+    - type: "fictitious_algorithm"
+      description: "Referencing non-standard or incorrect algorithms"
+      severity: "critical"
+      
+    - type: "false_equivalence"
+      description: "Claiming mathematical equivalence of non-equivalent expressions"
+      severity: "critical"
+  
+  documentation_hallucinations:
+    - type: "unsupported_claims"
+      description: "Stating properties without mathematical proof"
+      severity: "medium"
+      
+    - type: "incorrect_complexity"
+      description: "Wrong time/space complexity analysis"
+      severity: "low"
+
+# Enforcement Actions
+enforcement:
+  
+  violation_responses:
+    critical:
+      action: "reject_immediately"
+      notification: "alert_human_reviewer"
+      logging: "detailed_telemetry"
+      
+    high:
+      action: "flag_for_review"
+      notification: "warning_message"
+      logging: "standard_telemetry"
+      
+    medium:
+      action: "log_and_continue"
+      notification: "informational"
+      logging: "summary_telemetry"
+      
+    low:
+      action: "log_only"
+      notification: "none"
+      logging: "aggregate_telemetry"
+  
+  remediation:
+    revert_to_original: true
+    human_approval_required: true
+    automated_retry: false
+
+# Audit Trail Requirements
+audit_trail:
+  required_metadata:
+    - "original_code_hash"
+    - "refactored_code_hash"
+    - "timestamp_iso8601"
+    - "ai_model_version"
+    - "violation_details"
+    - "test_case_parameters"
+    - "error_metrics"
+    
+  retention_policy:
+    duration_days: 365
+    compression: true
+    anonymization: false

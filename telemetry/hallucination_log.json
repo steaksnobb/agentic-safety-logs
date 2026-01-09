@@ -1,0 +1,98 @@
+{
+  "telemetry_schema_version": "1.0.0",
+  "description": "Hallucination detection log for AI-generated code anomalies",
+  "log_metadata": {
+    "created_at": "2026-01-09T23:07:00Z",
+    "last_updated": "2026-01-09T23:07:00Z",
+    "retention_policy_days": 365,
+    "log_level": "info"
+  },
+  "detection_rules": {
+    "phantom_optimization": {
+      "enabled": true,
+      "severity": "medium",
+      "description": "Detect claims of performance improvement without supporting benchmarks"
+    },
+    "invented_api": {
+      "enabled": true,
+      "severity": "critical",
+      "description": "Detect usage of non-existent library functions or methods"
+    },
+    "false_equivalence": {
+      "enabled": true,
+      "severity": "critical",
+      "description": "Detect claims of mathematical equivalence for non-equivalent expressions"
+    },
+    "logic_drift": {
+      "enabled": true,
+      "severity": "critical",
+      "description": "Detect systematic deviation in refactored code behavior"
+    }
+  },
+  "anomaly_entries": [
+    {
+      "entry_id": "example-001",
+      "timestamp": "2026-01-09T23:07:00Z",
+      "anomaly_type": "example_entry",
+      "severity": "info",
+      "description": "This is an example entry showing the expected log format",
+      "detection_method": "manual_inspection",
+      "affected_component": "none",
+      "parameters": {
+        "test_parameter": "example_value"
+      },
+      "metrics": {
+        "confidence_score": 1.0,
+        "false_positive_probability": 0.0
+      },
+      "resolution": {
+        "status": "documented",
+        "action_taken": "example_log_entry",
+        "resolved_at": "2026-01-09T23:07:00Z"
+      },
+      "audit_trail": {
+        "detector_version": "1.0.0",
+        "human_reviewed": false,
+        "notes": "Example entry for schema documentation"
+      }
+    }
+  ],
+  "statistics": {
+    "total_entries": 1,
+    "by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "info": 1
+    },
+    "by_type": {
+      "phantom_optimization": 0,
+      "invented_api": 0,
+      "false_equivalence": 0,
+      "logic_drift": 0,
+      "example_entry": 1
+    },
+    "by_status": {
+      "open": 0,
+      "under_review": 0,
+      "resolved": 0,
+      "documented": 1,
+      "false_positive": 0
+    }
+  },
+  "alert_configuration": {
+    "critical_threshold": 1,
+    "high_threshold": 3,
+    "notification_channels": [
+      "log_file",
+      "telemetry_dashboard"
+    ],
+    "escalation_policy": {
+      "critical": "immediate",
+      "high": "within_1_hour",
+      "medium": "within_24_hours",
+      "low": "weekly_digest"
+    }
+  }
+}
