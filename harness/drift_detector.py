@@ -20,7 +20,6 @@ from enum import Enum
 
 import numpy as np
 import pandas as pd
-import polars as pl
 from scipy import stats
 from scipy.special import erf
 
