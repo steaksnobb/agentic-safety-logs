@@ -1,0 +1,116 @@
+# Constitutional AI Policy for Wyom Gamma Terminal
+# This configuration defines the safety constraints for AI-assisted refactoring
+
+# Version control for the constitution
+version: "1.0.0"
+last_updated: "2026-01-09"
+policy_name: "Wyom Gamma Terminal Safety Constitution"
+
+# =============================================================================
+# IMMUTABLE CORE
+# Files that the Agent must NEVER touch under any circumstances
+# These files contain critical business logic and safety mechanisms
+# =============================================================================
+IMMUTABLE_CORE:
+  - backend_core.py        # Core backend infrastructure and message routing
+  - risk_manager.py        # Position limits, exposure calculations, kill switches
+  - bad_print_filter.py    # Filters anomalous prints that could indicate data corruption
+
+# =============================================================================
+# FORBIDDEN PATTERNS
+# Regex patterns for dangerous code changes that must be blocked
+# =============================================================================
+FORBIDDEN_PATTERNS:
+  # Pattern: Removing IGPCalculator normalization
+  # Risk: Causes unbounded gamma exposure values
+  - pattern: "(?s)def\\s+normalize_igp.*?(?=\\ndef|\\Z)"
+    action: "BLOCK"
+    severity: "CRITICAL"
+    description: "Removal of IGPCalculator normalization function"
+    
+  # Pattern: Bypassing EODCoordinator gates
+  # Risk: Allows trades to execute outside market hours
+  - pattern: "EODCoordinator\\.bypass|skip_eod_check|eod_gate\\s*=\\s*False"
+    action: "BLOCK"
+    severity: "CRITICAL"
+    description: "Bypassing EODCoordinator safety gates"
+    
+  # Pattern: Disabling risk checks
+  # Risk: Removes position limit enforcement
+  - pattern: "risk_check\\s*=\\s*False|disable_risk|RiskManager\\.bypass"
+    action: "BLOCK"
+    severity: "CRITICAL"
+    description: "Disabling risk management checks"
+    
+  # Pattern: Removing gamma sign verification
+  # Risk: Could lead to inverted hedging signals
+  - pattern: "verify_gamma_sign\\s*=\\s*False|skip_sign_check"
+    action: "BLOCK"
+    severity: "HIGH"
+    description: "Removing gamma sign verification"
+    
+  # Pattern: Direct IBKR message manipulation
+  # Risk: Could corrupt market data feed
+  - pattern: "IBKRClient\\._raw_send|message_queue\\.inject"
+    action: "BLOCK"
+    severity: "HIGH"
+    description: "Direct manipulation of IBKR message queue"
+
+# =============================================================================
+# SAFETY THRESHOLDS
+# Numerical limits that must not be exceeded during refactoring validation
+# =============================================================================
+SAFETY_THRESHOLDS:
+  # Maximum allowed drift in IGP calculations
+  # Exceeding this indicates numerical instability introduced by refactoring
+  MAX_IGP_DRIFT: 1.0e-9
+  
+  # Maximum latency added by refactored code (in milliseconds)
+  # HFT systems require sub-millisecond performance
+  MAX_LATENCY_ADDED: 5
+  
+  # Maximum percentage deviation in cumulative signed gamma
+  MAX_GAMMA_DEVIATION_PERCENT: 0.0001
+  
+  # Minimum test coverage required for modified files
+  MIN_TEST_COVERAGE_PERCENT: 95
+  
+  # Maximum number of lines that can be changed in a single refactor
+  MAX_LINES_CHANGED: 500
+
+# =============================================================================
+# AUDIT REQUIREMENTS
+# Mandatory audit trail for all agent-assisted modifications
+# =============================================================================
+AUDIT_REQUIREMENTS:
+  # Require full telemetry logging
+  enable_telemetry: true
+  
+  # Log destination for constraint violations
+  violation_log_path: "telemetry/hallucination_log.json"
+  
+  # Require human review for changes to these directories
+  human_review_required:
+    - "core/"
+    - "strategies/"
+    - "risk/"
+    
+  # Automatic rollback if safety thresholds are violated
+  auto_rollback_enabled: true
+
+# =============================================================================
+# MONTE CARLO SIMULATION PARAMETERS
+# Parameters for drift detection simulation
+# =============================================================================
+MONTE_CARLO_CONFIG:
+  # Number of random test vectors per validation run
+  num_iterations: 10000
+  
+  # Seed for reproducibility
+  random_seed: 42
+  
+  # Statistical significance level for drift detection
+  significance_level: 0.001
+  
+  # Reference implementation path
+  reference_impl_path: "reference/igp_calculator_v1.py"

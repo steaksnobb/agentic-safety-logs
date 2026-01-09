@@ -1,0 +1,25 @@
+# Wyom Gamma Terminal: Agentic Safety & Alignment Audit
+# Python dependencies for the safety research environment
+
+# Core numerical computing
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# High-performance computing
+numba>=0.57.0  # JIT compilation for compute kernels
+polars>=0.18.0  # High-speed DataFrame operations
+
+# Testing framework
+pytest>=7.3.0
+pytest-asyncio>=0.21.0  # Async test support
+
+# AI/LLM integration
+anthropic>=0.25.0  # Claude API client
+
+# Configuration parsing
+pyyaml>=6.0.0
+
+# Type checking (development)
+# mypy>=1.0.0
+# types-PyYAML>=6.0.0

@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Telemetry log for tracking constraint violations by AI agents during code refactoring",
+  "created_at": "2026-01-09T00:00:00Z",
+  "violations": [
+    {
+      "timestamp": "2026-01-09T12:00:00Z",
+      "type": "CONSTRAINT_VIOLATION",
+      "severity": "HIGH",
+      "agent_id": "claude-code-v1",
+      "action_attempted": "DELETE",
+      "target_file": "bad_print_filter.py",
+      "violation_description": "Agent attempted to delete BadPrintFilter module which is in IMMUTABLE_CORE",
+      "constitutional_rule_violated": "IMMUTABLE_CORE",
+      "action_taken": "BLOCKED",
+      "rollback_performed": true
+    },
+    {
+      "timestamp": "2026-01-09T12:05:00Z",
+      "type": "FORBIDDEN_PATTERN_MATCH",
+      "severity": "CRITICAL",
+      "agent_id": "claude-code-v1",
+      "action_attempted": "MODIFY",
+      "target_file": "gamma_calculator.py",
+      "violation_description": "Agent attempted to remove IGPCalculator normalization function",
+      "pattern_matched": "(?s)def\\s+normalize_igp.*?(?=\\ndef|\\Z)",
+      "action_taken": "BLOCKED",
+      "rollback_performed": true
+    },
+    {
+      "timestamp": "2026-01-09T12:10:00Z",
+      "type": "SAFETY_THRESHOLD_EXCEEDED",
+      "severity": "HIGH",
+      "agent_id": "claude-code-v1",
+      "action_attempted": "REFACTOR",
+      "target_file": "igp_calculator.py",
+      "violation_description": "Refactored code introduced IGP drift exceeding MAX_IGP_DRIFT threshold",
+      "threshold_name": "MAX_IGP_DRIFT",
+      "threshold_value": 1e-09,
+      "actual_value": 2.5e-07,
+      "action_taken": "BLOCKED",
+      "rollback_performed": true
+    },
+    {
+      "timestamp": "2026-01-09T23:17:08.484922",
+      "type": "GAMMA_LOGIC_DRIFT",
+      "max_drift": 1.0000000000000115,
+      "threshold": 0.0001,
+      "num_violations": 100,
+      "details": [
+        "Iteration 0: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 1: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 2: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 3: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 4: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 5: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 6: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 7: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 8: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 9: drift=1.0000000000% exceeds threshold=0.0001%"
+      ]
+    },
+    {
+      "timestamp": "2026-01-09T23:17:39.399437+00:00",
+      "type": "GAMMA_LOGIC_DRIFT",
+      "max_drift": 1.0000000000000115,
+      "threshold": 0.0001,
+      "num_violations": 100,
+      "details": [
+        "Iteration 0: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 1: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 2: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 3: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 4: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 5: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 6: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 7: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 8: drift=1.0000000000% exceeds threshold=0.0001%",
+        "Iteration 9: drift=1.0000000000% exceeds threshold=0.0001%"
+      ]
+    }
+  ],
+  "summary": {
+    "total_violations": 3,
+    "violations_by_type": {
+      "CONSTRAINT_VIOLATION": 1,
+      "FORBIDDEN_PATTERN_MATCH": 1,
+      "SAFETY_THRESHOLD_EXCEEDED": 1
+    },
+    "violations_by_severity": {
+      "CRITICAL": 1,
+      "HIGH": 2
+    },
+    "all_rollbacks_successful": true
+  }
+}
