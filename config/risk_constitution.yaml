@@ -1,0 +1,275 @@
+# Risk Constitution: Immutable Safety Constraints
+# Version: 1.0.0
+# Purpose: Define inviolable constraints for agentic code generation and refactoring operations
+
+# ==============================================================================
+# MATHEMATICAL PRECISION BOUNDARIES
+# ==============================================================================
+precision_constraints:
+  # Maximum allowable relative error between baseline and refactored implementations
+  max_relative_error: 1.0e-10
+  
+  # Maximum allowable absolute error for numerical comparisons
+  max_absolute_error: 1.0e-12
+  
+  # Floating point comparison tolerance
+  float_tolerance: 1.0e-15
+  
+  # Monte Carlo convergence threshold
+  mc_convergence_epsilon: 1.0e-8
+  
+  # Required decimal precision for financial calculations
+  financial_precision_digits: 10
+
+# ==============================================================================
+# FORBIDDEN TRANSFORMATION PATTERNS
+# ==============================================================================
+forbidden_patterns:
+  # Code patterns that must never be introduced during refactoring
+  
+  dangerous_operations:
+    - pattern: "eval\\("
+      reason: "Dynamic code execution introduces security vulnerabilities"
+      severity: "CRITICAL"
+    
+    - pattern: "exec\\("
+      reason: "Arbitrary code execution is a security risk"
+      severity: "CRITICAL"
+    
+    - pattern: "__import__\\(.*input"
+      reason: "Dynamic imports from user input are unsafe"
+      severity: "CRITICAL"
+  
+  mathematical_antipatterns:
+    - pattern: "(?<!np\\.)random\\.random\\(\\)"
+      reason: "Non-seeded random without numpy degrades reproducibility"
+      severity: "HIGH"
+    
+    - pattern: "float\\(.*\\)\\s*==\\s*float\\("
+      reason: "Direct float equality comparisons are numerically unstable"
+      severity: "HIGH"
+    
+    - pattern: "1\\s*/\\s*0"
+      reason: "Division by zero without guards causes runtime errors"
+      severity: "CRITICAL"
+    
+    - pattern: "math\\.sqrt\\(-"
+      reason: "Square root of negative without domain validation"
+      severity: "HIGH"
+  
+  data_handling_violations:
+    - pattern: "pandas.*inplace=True"
+      reason: "Inplace operations reduce traceability and debugging capability"
+      severity: "MEDIUM"
+    
+    - pattern: "\\.iloc\\[.*\\]\\s*=(?!.*\\.copy\\(\\))"
+      reason: "Direct iloc assignment without copy may cause SettingWithCopyWarning"
+      severity: "MEDIUM"
+  
+  type_safety_violations:
+    - pattern: "\\)\\s*#\\s*type:\\s*ignore"
+      reason: "Type ignore comments suppress important type checking"
+      severity: "MEDIUM"
+    
+    - pattern: "cast\\(Any,"
+      reason: "Casting to Any defeats type system guarantees"
+      severity: "LOW"
+
+# ==============================================================================
+# REQUIRED CODE PATTERNS
+# ==============================================================================
+required_patterns:
+  # Patterns that must be present in specific contexts
+  
+  numerical_stability:
+    - context: "black_scholes|option_pricing"
+      pattern: "np\\.exp\\(.*\\)"
+      reason: "Option pricing requires exponential calculations"
+    
+    - context: "monte_carlo|simulation"
+      pattern: "np\\.random\\.(?:seed|default_rng)"
+      reason: "Monte Carlo simulations must be reproducible with seeding"
+  
+  error_handling:
+    - context: "def.*calculate|def.*compute"
+      pattern: "(?:try|if.*is.*None|assert)"
+      reason: "Numerical functions must validate inputs"
+  
+  documentation:
+    - context: "class.*Analyzer|class.*Detector"
+      pattern: '""".*"""'
+      reason: "All analyzer classes require docstrings"
+
+# ==============================================================================
+# OUTPUT VALIDATION RULES
+# ==============================================================================
+output_validation:
+  black_scholes_constraints:
+    # Black-Scholes option pricing domain constraints
+    call_option_bounds:
+      min: 0.0
+      max: "stock_price"  # Call value cannot exceed stock price
+    
+    put_option_bounds:
+      min: 0.0
+      max: "strike_price"  # Put value cannot exceed strike price
+    
+    required_properties:
+      - name: "call_put_parity"
+        formula: "C - P = S - K*exp(-r*T)"
+        tolerance: 1.0e-6
+      
+      - name: "monotonicity"
+        rule: "option_value increases with volatility"
+  
+  monte_carlo_constraints:
+    min_sample_size: 1000
+    max_sample_size: 1000000
+    required_confidence_level: 0.95
+    max_standard_error_ratio: 0.01
+
+# ==============================================================================
+# DRIFT DETECTION THRESHOLDS
+# ==============================================================================
+drift_thresholds:
+  # Statistical significance thresholds for drift detection
+  
+  statistical_tests:
+    kolmogorov_smirnov:
+      alpha: 0.01  # Significance level
+      critical_d: 0.05  # Critical D-statistic
+    
+    chi_squared:
+      alpha: 0.01
+      degrees_of_freedom: "auto"
+    
+    mann_whitney_u:
+      alpha: 0.01
+  
+  divergence_metrics:
+    kl_divergence_max: 0.1
+    jensen_shannon_divergence_max: 0.05
+    wasserstein_distance_max: 0.1
+  
+  error_metrics:
+    mean_absolute_error_max: 1.0e-6
+    root_mean_squared_error_max: 1.0e-5
+    max_absolute_error_max: 1.0e-4
+
+# ==============================================================================
+# HALLUCINATION TRIGGERS
+# ==============================================================================
+hallucination_triggers:
+  # Conditions that indicate potential AI hallucination in code generation
+  
+  logic_inconsistencies:
+    - trigger: "output_sign_flip"
+      description: "Result sign changes without mathematical justification"
+      action: "LOG_AND_ALERT"
+    
+    - trigger: "dimension_mismatch"
+      description: "Array/matrix dimensions become incompatible"
+      action: "REJECT_TRANSFORMATION"
+    
+    - trigger: "convergence_loss"
+      description: "Iterative algorithm no longer converges"
+      action: "REJECT_TRANSFORMATION"
+  
+  semantic_drift:
+    - trigger: "variable_name_semantic_change"
+      description: "Variable renamed in way that changes meaning (e.g., 'price' to 'rate')"
+      action: "LOG_AND_REVIEW"
+    
+    - trigger: "algorithm_substitution"
+      description: "Core algorithm replaced with different approach"
+      action: "LOG_AND_ALERT"
+  
+  compliance_violations:
+    - trigger: "precision_degradation"
+      description: "Numerical precision reduced below threshold"
+      action: "REJECT_TRANSFORMATION"
+    
+    - trigger: "determinism_loss"
+      description: "Previously deterministic code becomes non-deterministic"
+      action: "REJECT_TRANSFORMATION"
+
+# ==============================================================================
+# ERROR HANDLING REQUIREMENTS
+# ==============================================================================
+error_handling:
+  required_validations:
+    - check: "input_type_validation"
+      applies_to: ["public_functions", "api_endpoints"]
+    
+    - check: "domain_validation"
+      applies_to: ["mathematical_functions"]
+      examples:
+        - "volatility > 0"
+        - "time_to_maturity > 0"
+        - "strike_price > 0"
+    
+    - check: "output_sanity_check"
+      applies_to: ["numerical_computations"]
+  
+  exception_handling:
+    allowed_exceptions:
+      - "ValueError"
+      - "TypeError"
+      - "DomainError"
+      - "ConvergenceError"
+    
+    forbidden_bare_except: true
+    require_specific_exceptions: true
+
+# ==============================================================================
+# TESTING REQUIREMENTS
+# ==============================================================================
+testing_requirements:
+  coverage_minimums:
+    statement_coverage: 90
+    branch_coverage: 80
+    function_coverage: 95
+  
+  required_test_types:
+    - unit_tests
+    - property_based_tests
+    - monte_carlo_validation_tests
+    - regression_tests
+  
+  numerical_test_requirements:
+    - test_type: "known_solution_validation"
+      description: "Test against analytically known results"
+    
+    - test_type: "symmetry_validation"
+      description: "Verify mathematical symmetries (e.g., put-call parity)"
+    
+    - test_type: "boundary_condition_tests"
+      description: "Test extreme parameter values"
+
+# ==============================================================================
+# AUDIT LOGGING
+# ==============================================================================
+audit_logging:
+  required_log_fields:
+    - timestamp
+    - operation_type
+    - baseline_checksum
+    - refactored_checksum
+    - drift_metrics
+    - violations_detected
+    - action_taken
+  
+  log_retention:
+    duration_days: 365
+    archive_after_days: 90
+  
+  alert_conditions:
+    - condition: "critical_violation"
+      notification: "immediate"
+    
+    - condition: "high_severity_drift"
+      notification: "within_1_hour"
+    
+    - condition: "pattern_match_accumulation"
+      threshold: 5
+      notification: "daily_summary"
